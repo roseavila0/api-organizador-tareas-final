@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES6", //Genera código compatible con Node.js moderno.
+    "module": "commonjs", // El sistema de módulos que usa Node.js.
+    "outDir": "./dist", //Si compilas con tsc, los archivos JS irán ahí.
+    "strict": true, // Buenas prácticas para evitar errores.
+    "esModuleInterop": true //Permite usar import con paquetes comunes.
+  },
+  "include": ["src/**/*", "backend/src/index.ts"], //bien apuntando solo a src.
+  "exclude": ["node_modules"] //bien apuntando solo a src.
+}

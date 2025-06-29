@@ -1,0 +1,27 @@
+{
+  "name": "api-restful-organizador-tareas-rosa-avila",
+  "version": "1.0.0",
+  "main": "backend/src/index.ts",
+  "scripts": {
+    "start": "ts-node-dev backend/src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Rosa Avila",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}

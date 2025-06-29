@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Organizador de Tareas</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Organizador de Tareas - Dashboard</h1>
+      <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </header>
+
+    <div class="container">
+      <div class="welcome-section">
+        <h2>¡Bienvenido/a de vuelta!</h2>
+        <p>
+          Has iniciado sesión exitosamente. Aquí puedes gestionar todas tus
+          tareas y proyectos.
+        </p>
+      </div>
+
+      <!-- Formulario simple para agregar tareas -->
+      <div class="add-task-section">
+        <h3>Agregar Nueva Tarea</h3>
+        <form id="addTaskForm">
+          <input
+            type="text"
+            id="taskDescription"
+            name="task"
+            placeholder="Descripción de la tarea"
+            required
+          />
+          <input type="date" id="taskDueDate" name="dueDate" required />
+          <button type="submit">Agregar Tarea</button>
+        </form>
+      </div>
+
+      <!-- Sección de Tareas -->
+      <div class="tasks-section">
+        <div class="tasks-header">
+          <h2>Mis Tareas</h2>
+          <button onclick="loadTasks()">Actualizar</button>
+        </div>
+        <div id="tasksContainer" class="tasks-container">
+          <div class="loading">Cargando tareas...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>
