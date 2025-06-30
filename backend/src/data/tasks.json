@@ -5,13 +5,13 @@
   "tasks": [
     {
       "id": "1",
-      "task": "Terminar el proyecto integrador",
-      "dueDate": "2025-06-29"
+      "task": "Terminar el proyecto integrador ya",
+      "dueDate": "2025-06-30"
     },
     {
-      "id": "2",
-      "task": "Enviar el proyecto integrador",
-      "dueDate": "2025-06-30"
+      "task": "Deployar ",
+      "dueDate": "2025-06-29",
+      "id": "2"
     }
   ]
 }

@@ -1,6 +1,6 @@
 //El “mapa de rutas”
 /*Este archivo le dice a Express:
-“Cuando lleguen solicitudes a /, esto es lo que debes hacer dependiendo del método HTTP (GET, POST, etc.) y la URL”.*/
+“Cuando lleguen solicitudes a /api/tasks, esto es lo que debes hacer dependiendo del método HTTP (GET, POST, etc.) y la URL”.*/
 
 import { Router } from 'express';
 
@@ -20,7 +20,7 @@ import { validateMiddleware } from '../middlewares/validate-middleware';
  Importaciones importantes:
  Cargas el enrutador de Express
  -Importar las funciones controlador (las que hacen el trabajo real)
- -Importar un middleware de validación para revisar los datos antes de crear una frase */
+ -Importar un middleware de validación para revisar los datos antes de crear una task */
 
 // crando la instancia del router (para manejar las rutas) // Este router es como una mini-app de Express solo para manejar /api/tasks.
 const router: Router = Router();

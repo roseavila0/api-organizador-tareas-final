@@ -11,6 +11,10 @@ import { errorMiddleware } from './middlewares/error-middleware';
 import { validateMiddleware } from './middlewares/validate-middleware';
 
 dotenv.config();
+console.log("⚙️ Variables de entorno cargadas:");
+console.log("PORT:", process.env.PORT);
+console.log("API_TASKS_URL:", process.env.API_TASKS_URL);
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +29,7 @@ app.use(express.static(path.join(__dirname, '../../client')));
 
 // Rutas de API
 app.use('/api/auth', authRoutes);
-app.use(process.env.API_TASKS_URL || '/api/tasks', tasksRoutes);
+app.use('/api/tasks', tasksRoutes);
 
 // Rutas específicas para las páginas web
 app.get('/', (req, res) => {
