@@ -28,7 +28,11 @@ async function loadTasks() {
   try {
     container.innerHTML = '<div class="loading">Cargando tareas...</div>';
 
-    const tasks = await httpRequest('http://localhost:3000/api/tasks');
+       // Solo para pruebas locales:
+    //const tasks = await httpRequest('http://localhost:3000/api/tasks');
+
+    // Para producción (ruta relativa):
+      const tasks = await httpRequest('/api/tasks');
     renderTasks(tasks);
   } catch (error) {
     container.innerHTML =
@@ -95,7 +99,14 @@ function formatTaskDate(dateString) {
 
 async function editTask(taskId) {
   try {
-    const allTasks = await httpRequest('http://localhost:3000/api/tasks');
+
+  
+      const tasks = await httpRequest('/api/auth/login');
+      // Solo para pruebas locales:
+    //const allTasks = await httpRequest('http://localhost:3000/api/tasks');
+
+      // Para producción (ruta relativa):
+    const allTasks = await httpRequest('/api/tasks');
     const task = allTasks.find((t) => t.id === taskId);
 
     if (!task) {
@@ -166,7 +177,12 @@ async function saveTask(taskId) {
 // Nueva función para actualizar la tarea en el servidor
 async function updateTaskOnServer(taskId, taskData) {
   try {
-    await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
+
+    // Solo para pruebas locales:
+    //await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
+
+       // Para producción (ruta relativa):
+    await httpRequest(`/api/tasks`, {
       method: 'PATCH',
       body: JSON.stringify(taskData),
     });
@@ -184,7 +200,11 @@ async function deleteTask(taskId) {
   }
 
   try {
-    await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
+      // Solo para pruebas locales:
+    //await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
+
+       // Para producción (ruta relativa):
+     await httpRequest(`/api/tasks`, {
       method: 'DELETE',
     });
 
@@ -212,7 +232,11 @@ async function createNewTask(event) {
   };
 
   try {
-    await httpRequest('http://localhost:3000/api/tasks', {
+    // Solo para pruebas locales:
+    //await httpRequest('http://localhost:3000/api/tasks', {
+
+    // Para producción (ruta relativa):
+    await httpRequest('/api/tasks', {
       method: 'POST',
       body: JSON.stringify(taskData),
     });
@@ -227,7 +251,11 @@ async function createNewTask(event) {
 
 async function testAPI() {
   try {
-    const tasks = await httpRequest('http://localhost:3000/api/tasks');
+    // Solo para pruebas locales:
+    //const tasks = await httpRequest('http://localhost:3000/api/tasks');
+
+    // Para producción (ruta relativa):
+     const tasks = await httpRequest('/api/tasks');
     alert(`¡API funcionando! Se encontraron ${tasks.length || 0} tareas.`);
     loadTasks();
   } catch (error) {
