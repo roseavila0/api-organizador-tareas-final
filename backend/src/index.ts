@@ -22,21 +22,12 @@ console.log("JWT_SECRET:", process.env.JWT_SECRET);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware de autenticación (se ejecuta antes que los demás)
-app.use(authMiddleware);
-
-
 // Middlewares globales
 app.use(cors());
 app.use(express.json());
 
 // Servir archivos estáticos desde carpeta client
 app.use(express.static(path.join(__dirname, '../../client')));
-
-// Rutas de API
-app.use('/api/auth', authRoutes);
-app.use(process.env.API_TASKS_URL || '/api/tasks', tasksRoutes);
-
 
 // Rutas específicas para las páginas web
 app.get('/', (req, res) => {
@@ -51,15 +42,22 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dashboard.html'));
 });
 
+// Middleware de autenticación (se ejecuta antes que los demás)
+app.use(authMiddleware);
+
+// Rutas de API
+app.use('/api/auth', authRoutes);
+app.use(process.env.API_TASKS_URL || '/api/tasks', tasksRoutes);
+
+// Middlewares de validación y manejo de errores
+app.use(validateMiddleware);
+app.use(errorMiddleware);
+
 //Middleware para manejar solicitudes a rutas que no existen en la app (404)
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Endpoint no encontrado' });
 });
 
-
-// Middlewares de validación y manejo de errores
-app.use(validateMiddleware);
-app.use(errorMiddleware);
 
 // Iniciamos el servidor
 app.listen(PORT, () => {
