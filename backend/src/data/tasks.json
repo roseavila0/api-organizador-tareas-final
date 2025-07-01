@@ -1,17 +1,27 @@
 {
   "info": {
-    "total": 4
+    "total": 6
   },
   "tasks": [
     {
       "id": "1",
-      "task": "Terminar el proyecto integrador ya",
+      "task": "terminar Api",
       "dueDate": "2025-06-30"
     },
     {
-      "task": "Deployar ",
-      "dueDate": "2025-06-29",
-      "id": "2"
+      "id": "2",
+      "task": "enviar Api",
+      "dueDate": "2025-06-30"
+    },
+    {
+      "id": "3",
+      "task": "comprarme una salchipapa - actualizando fecha -prueba",
+      "dueDate": "2025-07-01"
+    },
+    {
+      "id": "6",
+      "task": "prueba 6 - la 4 5 se van a eliminar ",
+      "dueDate": "2025-07-02"
     }
   ]
 }

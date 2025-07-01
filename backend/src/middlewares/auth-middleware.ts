@@ -1,19 +1,52 @@
-// Este middleware bloquea el acceso si no se envía un token válido:
-//✅ Úsalo si quieres proteger rutas que no cualquiera debería tocar, como las de crear, actualizar o borrar frases.
+// Middleware de autenticación con JWT
+// Este middleware protege rutas restringidas verificando que se envíe un token válido en el header Authorization
 
 import express, { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+
+
+// Extendemos la interfaz Request para incluir el usuario decodificado
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
 
 export const authMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ): void => {
-  const token = req.headers['authorization'];
-  if (!token || token !== process.env.AUTH_TOKEN) {
-    // Si no hay token o si el token no es exactamente "Bearer my-secret-token", entonces…   // Devuelve un error con código 401 (que significa "No autorizado").  // Manda un mensaje en JSON diciendo que no está autorizado.   // return detiene la función para que NO siga al siguiente paso.
+   // Extraer el token del encabezado Authorization (formato: Bearer <token>)
+  const authHeader = req.headers['authorization'];
+  const token =
+    authHeader && authHeader.startsWith('Bearer ')
+      ? authHeader.substring(7) // Remover 'Bearer ' del inicio
+      : null;
 
-    res.status(401).json({ error: 'No autorizado' });
+
+  // Si no hay token, bloquear acceso
+  if (!token) {
+    res.status(401).json({
+      error: 'Token de acceso requerido',
+      success: false,
+    });
     return;
   }
-  next(); // Si el token sí existe y sí es correcto, entonces la solicitud está autorizada. next() le dice a Express: “ok, pasa al siguiente middleware o a la ruta que sigue”.
+
+  try {
+     // Verificar el token usando la clave secreta del entorno
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    req.user = decoded;    // Guardar la información del usuario en la petición para usarla más adelante
+    next();     // Continuar con la siguiente función
+  } catch (error) {
+        // Si el token es inválido o expiró
+    res.status(401).json({
+      error: 'Token inválido o expirado',
+      success: false,
+    });
+    return;
+  }
 };

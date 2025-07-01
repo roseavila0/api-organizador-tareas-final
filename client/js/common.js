@@ -33,6 +33,30 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
+function getAuthToken() {
+  return localStorage.getItem('authToken');
+}
+
+function setAuthToken(token) {
+  localStorage.setItem('authToken', token);
+}
+
+function removeAuthToken() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+}
+
+function isAuthenticated() {
+  const token = getAuthToken();
+  return token !== null && token !== undefined;
+}
+
+function redirectToLogin() {
+  alert('Tu sesión ha expirado. Serás redirigido al login.');
+  removeAuthToken();
+  window.location.href = '/login';
+}
+
 function validateRequiredFields(fields) {
   const errors = [];
 
@@ -50,13 +74,30 @@ function validateRequiredFields(fields) {
 
 async function httpRequest(url, options = {}) {
   try {
+    // Preparar headers por defecto
+    const defaultHeaders = {
+      'Content-Type': 'application/json',
+    };
+
+    // Agregar token de autenticación si existe
+    const token = getAuthToken();
+    if (token) {
+      defaultHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        ...defaultHeaders,
         ...options.headers,
       },
       ...options,
     });
+
+    // Si el token es inválido (401), redirigir al login
+    if (response.status === 401) {
+      redirectToLogin();
+      throw new Error('Token inválido o expirado');
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

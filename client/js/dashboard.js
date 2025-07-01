@@ -2,7 +2,7 @@ let id = 0;
 
 function logout() {
   if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-    localStorage.removeItem('user');
+    removeAuthToken();
     alert('Sesión cerrada exitosamente');
     window.location.href = '/login';
   }
@@ -28,20 +28,13 @@ async function loadTasks() {
   try {
     container.innerHTML = '<div class="loading">Cargando tareas...</div>';
 
-    const response = await fetch('http://localhost:3000/api/tasks');
-
-    if (response.ok) {
-      const tasks = await response.json();
-      renderTasks(tasks);
-    } else {
-      container.innerHTML =
-        '<div class="no-tasks">Error al cargar las tareas. Código: ' +
-        response.status +
-        '</div>';
-    }
+    const tasks = await httpRequest('http://localhost:3000/api/tasks');
+    renderTasks(tasks);
   } catch (error) {
     container.innerHTML =
-      '<div class="no-tasks">Error de conexión: ' + error.message + '</div>';
+      '<div class="no-tasks">Error al cargar las tareas: ' +
+      error.message +
+      '</div>';
     console.error('Error loading tasks:', error);
   }
 }
@@ -102,14 +95,7 @@ function formatTaskDate(dateString) {
 
 async function editTask(taskId) {
   try {
-    // Obtenemos todas las tareas y filtramos por ID
-    const allTasksResponse = await fetch('http://localhost:3000/api/tasks');
-    if (!allTasksResponse.ok) {
-      alert('Error al cargar las tareas');
-      return;
-    }
-
-    const allTasks = await allTasksResponse.json();
+    const allTasks = await httpRequest('http://localhost:3000/api/tasks');
     const task = allTasks.find((t) => t.id === taskId);
 
     if (!task) {
@@ -180,22 +166,15 @@ async function saveTask(taskId) {
 // Nueva función para actualizar la tarea en el servidor
 async function updateTaskOnServer(taskId, taskData) {
   try {
-    const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+    await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(taskData),
     });
 
-    if (response.ok) {
-      alert('Tarea actualizada exitosamente');
-      loadTasks(); // Recargar las tareas
-    } else {
-      alert('Error al actualizar la tarea');
-    }
+    alert('Tarea actualizada exitosamente');
+    loadTasks(); // Recargar las tareas
   } catch (error) {
-    alert('Error de conexión: ' + error.message);
+    alert('Error al actualizar la tarea: ' + error.message);
   }
 }
 
@@ -205,18 +184,14 @@ async function deleteTask(taskId) {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+    await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
       method: 'DELETE',
     });
 
-    if (response.ok) {
-      alert('Tarea eliminada exitosamente');
-      loadTasks();
-    } else {
-      alert('Error al eliminar la tarea');
-    }
+    alert('Tarea eliminada exitosamente');
+    loadTasks();
   } catch (error) {
-    alert('Error de conexión: ' + error.message);
+    alert('Error al eliminar la tarea: ' + error.message);
   }
 }
 
@@ -237,38 +212,24 @@ async function createNewTask(event) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/api/tasks', {
+    await httpRequest('http://localhost:3000/api/tasks', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(taskData),
     });
 
-    if (response.ok) {
-      alert('Tarea creada exitosamente');
-      document.getElementById('addTaskForm').reset();
-      loadTasks();
-    } else {
-      alert('Error al crear la tarea');
-    }
+    alert('Tarea creada exitosamente');
+    document.getElementById('addTaskForm').reset();
+    loadTasks();
   } catch (error) {
-    alert('Error de conexión: ' + error.message);
+    alert('Error al crear la tarea: ' + error.message);
   }
 }
 
 async function testAPI() {
   try {
-    const response = await fetch('http://localhost:3000/api/tasks');
-    if (response.ok) {
-      const tasks = await response.json();
-      alert(`¡API funcionando! Se encontraron ${tasks.length || 0} tareas.`);
-      loadTasks();
-    } else {
-      alert(
-        'Error al conectar con la API. Verifica que el backend esté ejecutándose.',
-      );
-    }
+    const tasks = await httpRequest('http://localhost:3000/api/tasks');
+    alert(`¡API funcionando! Se encontraron ${tasks.length || 0} tareas.`);
+    loadTasks();
   } catch (error) {
     alert('Error al conectar con la API: ' + error.message);
   }
@@ -288,14 +249,14 @@ window.addEventListener('load', function () {
   console.log('Dashboard cargado exitosamente');
   console.log('Redirect desde login funcionando correctamente');
 
-  updateWelcomeMessage();
-
-  const user = localStorage.getItem('user');
-  if (!user) {
+  // Verificar autenticación antes de continuar
+  if (!isAuthenticated()) {
     alert('Debes iniciar sesión primero');
     window.location.href = '/login';
     return;
   }
+
+  updateWelcomeMessage();
 
   // Configurar el evento del formulario simple
   const addTaskForm = document.getElementById('addTaskForm');

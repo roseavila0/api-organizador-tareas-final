@@ -1,29 +1,34 @@
+// tasks-models.ts
 /*
-tasks-models.ts: El modelo que se conecta con los datos reales
-Este archivo usa un archivo .json como si fuera una base de datos, y define métodos estáticos para trabajar con las tasks.
+ Este archivo actúa como el modelo de datos para las tareas (tasks).
+ Simula una base de datos utilizando un archivo JSON local.
+ Contiene métodos estáticos para obtener, crear, actualizar y eliminar tareas.
 */
 
 import fs from 'fs';
 import path from 'path';
 
+// Ruta al archivo JSON que simula la base de datos
 const filePath = path.join(__dirname, '../data/tasks.json');
-// definimos la ruta al archivo json que actua como bd de las tasks // Aquí se define la ruta al archivo donde se almacenan las tasks (tasks.json).
 
-//ESTRUCTURA DE UNA TASK --- Cada TASK tiene:       id: identificador único     -    task: el contenido de la tarea   -  dueDate: fecha limite para hacer la tarea
+
+// Estructura de una tarea
 interface Task {
   id: string;
   task: string;
   dueDate: string;
 }
 
-// getAllTasks() -----Devuelve todas las tareas del archivo .json:
+
 export class tasksModel {
+  // 📥 Obtener todas las tareas
   static getAllTasks(): Task[] {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     // lee el contedion del archivo json y lo convierta a js
     return data.tasks;
   }
 
+  
   // addTask(newTask) ----Agrega una nueva tarea:
   static addTask(newTask: Task): Task {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -36,13 +41,15 @@ export class tasksModel {
     data.tasks.push(task);
     // agrego la tarea al array
     data.info.total += 1;
-    // incremento el contador
+    // incremento el contador total
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
     // guardamos lo datos actualizados en el json
     return task;
     // devuelve la tarea
   }
+  
 
+  //  Actualizar una tarea por ID
   static updateTask(id: string, updatedData: Partial<Task>): Task | null {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
@@ -58,13 +65,17 @@ export class tasksModel {
     return data.tasks[index];
   }
 
+
+  // 🗑️ Eliminar una tarea por ID
   static deleteTask(id: string): boolean {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     // lee el contenido del archivo json y lo convierta a js
     const index = data.tasks.findIndex((task: Task) => task.id === id);
     // encuentra el indice de la tarea que coincide con el id
     if (index === -1) return false;
+    // Eliminamos la tarea del array
     data.tasks.splice(index, 1);
+     // Actualizamos el contador total
     data.info.total -= 1;
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
     return true;

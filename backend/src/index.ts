@@ -1,7 +1,6 @@
-// index.ts
+//importamos las dependencias que vamos a usar 
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-//import bodyParser from "body-parser";
 import path from 'path';
 import dotenv from 'dotenv';
 import tasksRoutes from './routes/tasks-routes';
@@ -10,18 +9,25 @@ import { authMiddleware } from './middlewares/auth-middleware';
 import { errorMiddleware } from './middlewares/error-middleware';
 import { validateMiddleware } from './middlewares/validate-middleware';
 
+
+// Cargamos las variables de entorno desde el archivo .env
 dotenv.config();
+// Mostramos en consola las variables cargadas desde el entorno
 console.log("⚙️ Variables de entorno cargadas:");
 console.log("PORT:", process.env.PORT);
 console.log("API_TASKS_URL:", process.env.API_TASKS_URL);
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
+// Inicializamos la aplicación de Express
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
+// Middleware de autenticación (se ejecuta antes que los demás)
+app.use(authMiddleware);
+
+
+// Middlewares globales
 app.use(cors());
-//app.use(bodyParser.json());
 app.use(express.json());
 
 // Servir archivos estáticos desde carpeta client
@@ -29,7 +35,8 @@ app.use(express.static(path.join(__dirname, '../../client')));
 
 // Rutas de API
 app.use('/api/auth', authRoutes);
-app.use('/api/tasks', tasksRoutes);
+app.use(process.env.API_TASKS_URL || '/api/tasks', tasksRoutes);
+
 
 // Rutas específicas para las páginas web
 app.get('/', (req, res) => {
@@ -44,15 +51,17 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dashboard.html'));
 });
 
-//Middleware para manejar solicitudes a rutas que no existen en la app
+//Middleware para manejar solicitudes a rutas que no existen en la app (404)
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Endpoint no encontrado' });
 });
 
-app.use(authMiddleware);
-app.use(errorMiddleware);
-app.use(validateMiddleware);
 
+// Middlewares de validación y manejo de errores
+app.use(validateMiddleware);
+app.use(errorMiddleware);
+
+// Iniciamos el servidor
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en: http://localhost:${PORT}`);
 });

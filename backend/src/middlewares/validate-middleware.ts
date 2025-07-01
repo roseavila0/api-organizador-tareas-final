@@ -1,3 +1,6 @@
+//  Middleware de validación para tareas
+// Verifica que los campos 'id', 'task' y 'dueDate' estén presentes y sean cadenas de texto
+
 import express, { Request, Response, NextFunction } from 'express';
 
 export const validateMiddleware = (
@@ -24,5 +27,5 @@ export const validateMiddleware = (
       .json({ error: "El campo 'dueDate' es requerido y debe ser string" });
     return;
   }
-  next();
+  next();   // Si todo está correcto, pasa al siguiente middleware o controlador
 };

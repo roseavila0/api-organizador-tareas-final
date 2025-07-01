@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         successMessage.textContent = `¡Bienvenido/a ${data.user.name}!`;
         successMessage.style.display = 'block';
 
+        localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
         setTimeout(function () {
