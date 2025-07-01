@@ -101,7 +101,6 @@ async function editTask(taskId) {
   try {
 
   
-      const tasks = await httpRequest('/api/auth/login');
       // Solo para pruebas locales:
     //const allTasks = await httpRequest('http://localhost:3000/api/tasks');
 
@@ -182,7 +181,7 @@ async function updateTaskOnServer(taskId, taskData) {
     //await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
 
        // Para producción (ruta relativa):
-    await httpRequest(`/api/tasks`, {
+    await httpRequest(`/api/tasks/${taskId}`, {
       method: 'PATCH',
       body: JSON.stringify(taskData),
     });
@@ -204,7 +203,7 @@ async function deleteTask(taskId) {
     //await httpRequest(`http://localhost:3000/api/tasks/${taskId}`, {
 
        // Para producción (ruta relativa):
-     await httpRequest(`/api/tasks`, {
+     await httpRequest(`/api/tasks/${taskId}`, {
       method: 'DELETE',
     });
 
