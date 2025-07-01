@@ -51,7 +51,7 @@ DELETE task    Elimina una tarea por ID                                         
 
 
 ---------------------------------------------------------------------------------------------
-En Rutas usadas en el frontend
+Rutas usadas en el frontend
 Para desarrollo local:
 
 fetch('http://localhost:3000/api/auth/login')
@@ -65,8 +65,25 @@ fetch('/api/tasks')
 En producción se usa ruta relativa para evitar errores de CORS.
 
 
--Comando de Deploy
-npm start
-
 -----------------------------------------------------------------------------------------------
+Deploy en Render
+Para desplegar el backend en Render.com:
 
+1.Subir el proyecto a GitHub
+
+2.Crear un nuevo Web Service en Render (Node.js)
+
+3.Configurar lo siguiente:
+
+Comando de Build:
+npm install
+
+
+Comando de Inicio:
+node backend/dist/index.js
+
+
+Asegúrarse de compilar el proyecto antes con:
+npm run build
+
+Verificar que las rutas funcionen correctamente desde la URL de Render.
