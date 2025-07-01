@@ -24,6 +24,7 @@ Permite a los usuarios:
 
 ### Desarrollo local
 
+Cuando haya clonado el proyecto en su computador, use npm install para instalar las dependencias necesarias.
 
 Levanta el servidor: "npm run dev"
 Posterior puedes hacer pruebas en postman con las siguientes rutas y métodos:
