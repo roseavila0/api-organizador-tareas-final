@@ -14,6 +14,7 @@ Permite a los usuarios:
 ## Estructura del Proyecto
 
 - `/backend/src` → Código fuente del backend (API RESTful en TypeScript).
+-   `dist ` → carpeta que contiene todo el materiial de backend pero en formato js, sirve mas para la parte de deployar.
 - `/client` → Archivos estáticos del frontend (HTML, CSS, JS).
 - `.env` → Variables de entorno (como el JWT_SECRET o el puerto).
 - `.gitignore` → Evita subir `node_modules`, `.env`, etc.
@@ -24,7 +25,7 @@ Permite a los usuarios:
 ### Desarrollo local
 
 
-Levanta el servidor: "npm start"
+Levanta el servidor: "npm run dev"
 Posterior puedes hacer pruebas en postman con las siguientes rutas y métodos:
 
 
@@ -51,21 +52,8 @@ DELETE task    Elimina una tarea por ID                                         
 
 
 ---------------------------------------------------------------------------------------------
-Rutas usadas en el frontend
-Para desarrollo local:
-
-fetch('http://localhost:3000/api/auth/login')
-fetch('http://localhost:3000/api/tasks')
 
 
-
-Para producción (en Render u otro host):
-fetch('/api/auth/login')
-fetch('/api/tasks')
-En producción se usa ruta relativa para evitar errores de CORS.
-
-
------------------------------------------------------------------------------------------------
 Deploy en Render
 Para desplegar el backend en Render.com:
 
@@ -76,14 +64,12 @@ Para desplegar el backend en Render.com:
 3.Configurar lo siguiente:
 
 Comando de Build:
-npm install
+npm install && npm run build
 
 
 Comando de Inicio:
 node backend/dist/index.js
 
 
-Asegúrarse de compilar el proyecto antes con:
-npm run build
 
-Verificar que las rutas funcionen correctamente desde la URL de Render.
+

@@ -43,11 +43,11 @@ app.get('/dashboard', (req, res) => {
 });
 
 // Middleware de autenticación (se ejecuta antes que los demás)
-app.use(authMiddleware);
+//app.use(authMiddleware);
 
 // Rutas de API
 app.use('/api/auth', authRoutes);
-app.use(process.env.API_TASKS_URL || '/api/tasks', tasksRoutes);
+app.use(process.env.API_TASKS_URL || '/api/tasks',authMiddleware, tasksRoutes);
 
 // Middlewares de validación y manejo de errores
 app.use(validateMiddleware);

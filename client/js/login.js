@@ -17,11 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loginButton.disabled = true;
 
     try {
-      // Solo para pruebas locales:
-      //const response = await fetch('http://localhost:3000/api/auth/login', {
-
-      // Para producción (ruta relativa):
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
